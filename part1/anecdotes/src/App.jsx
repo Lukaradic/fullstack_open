@@ -18,10 +18,10 @@ const App = () => {
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
 
   const getRandomAnecdoteIndex = () => {
-    const index = Math.floor(Math.random() * anecdotes.length);
-    if (index === displayed) {
-      getRandomAnecdoteIndex();
-    }
+    let index;
+    do {
+      index = Math.floor(Math.random() * anecdotes.length);
+    } while (index === displayed);
     return index;
   };
 
