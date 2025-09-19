@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const PersonForm = ({ handleSubmit }) => {
   const [newPerson, setNewPerson] = useState({
@@ -20,6 +21,7 @@ export const PersonForm = ({ handleSubmit }) => {
     setNewPerson({
       name: "",
       number: "",
+      id: uuidv4(),
     });
   };
 
