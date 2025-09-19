@@ -4,7 +4,7 @@ import { useState } from "react";
 export const PersonForm = ({ handleSubmit }) => {
   const [newPerson, setNewPerson] = useState({
     name: "",
-    phone: "",
+    number: "",
   });
 
   const handleFormChange = (e) => {
@@ -19,7 +19,7 @@ export const PersonForm = ({ handleSubmit }) => {
     handleSubmit(newPerson);
     setNewPerson({
       name: "",
-      phone: "",
+      number: "",
     });
   };
 
@@ -38,9 +38,9 @@ export const PersonForm = ({ handleSubmit }) => {
         <div>
           phone:{" "}
           <input
-            name="phone"
+            name="number"
             onChange={handleFormChange}
-            value={newPerson?.phone}
+            value={newPerson?.number}
           />
         </div>
         <div>

@@ -1,10 +1,10 @@
 import React from "react";
 
 export const Person = ({ person }) => {
-  const { name, phone } = person;
+  const { name, number } = person;
   return (
     <p>
-      {name} {phone}
+      {name} {number}
     </p>
   );
 };

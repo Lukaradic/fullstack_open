@@ -1,12 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PersonsMap } from "./components/PersonsMap";
 import { PersonForm } from "./components/PersonForm";
 import { PersonsFilter } from "./components/PersonsFilter";
 import { checkIfNameExists } from "./util";
+import axios from "axios";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const fetchPersons = async () => {
+    const res = await axios.get("http://localhost:3000/persons");
+    const data = res?.data;
+
+    if (data) {
+      setPersons(data);
+    }
+  };
+
+  useEffect(() => {
+    fetchPersons();
+  }, []);
 
   const handleSubmit = (newPerson) => {
     if (checkIfNameExists(persons, newPerson.name)) {
