@@ -12,8 +12,10 @@ const logStream = fs.createWriteStream(path.join(process.cwd(), "access.log"), {
 
 morgan.token("body", (req, res) => JSON.stringify(req.body));
 
+app.use(express.static(path.join(__dirname, "../client/dist")));
 app.use(express.json());
 app.use(cors());
+app.use(express.static("dist"));
 
 app.use(
   morgan(

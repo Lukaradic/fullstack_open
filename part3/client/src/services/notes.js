@@ -1,13 +1,14 @@
 import axios from "axios";
-const baseUrl = "https://fullstack-open-2108.onrender.com";
+// const baseUrl = "https://fullstack-open-2108.onrender.com";
+const baseUrl = "/api/persons";
 
 const getAll = () => {
-  return axios.get(`${baseUrl}/api/persons`);
+  return axios.get(`${baseUrl}`);
 };
 
 const create = (newPerson) => {
   const { name, number } = newPerson;
-  return axios.post(`${baseUrl}/api/persons`, {
+  return axios.post(`${baseUrl}`, {
     name,
     number,
   });
@@ -18,7 +19,7 @@ const update = (id, newObject) => {
 };
 
 const deleteAction = (id) => {
-  return axios.delete(`${baseUrl}/api/persons/${id}`);
+  return axios.delete(`${baseUrl}/${id}`);
 };
 
 export default {
