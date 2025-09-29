@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const cors = require("cors");
 
 const fs = require("fs");
 const path = require("path");
@@ -12,6 +13,7 @@ const logStream = fs.createWriteStream(path.join(process.cwd(), "access.log"), {
 morgan.token("body", (req, res) => JSON.stringify(req.body));
 
 app.use(express.json());
+app.use(cors());
 
 app.use(
   morgan(
