@@ -1,4 +1,6 @@
+require("dotenv").config();
 const express = require("express");
+const Person = require("./models/person");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
@@ -24,31 +26,8 @@ app.use(
   )
 );
 
-let persons = [
-  {
-    id: "1",
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: "2",
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: "3",
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: "4",
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
-
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Person.find({}).then((result) => res.json(result));
 });
 
 app.get("/api/persons/:id", (req, res) => {
@@ -57,7 +36,7 @@ app.get("/api/persons/:id", (req, res) => {
   if (!id) {
     res.status(404).send("Bad request, no id provided");
   }
-  const person = persons.find((person) => person.id == id);
+  const person = Person.findById(id);
   if (!person) {
     res.status(404).send(`Person with id ${id} doesn't exist`);
   }
@@ -67,30 +46,26 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.post("/api/persons", (req, res) => {
   const { name, number } = req?.body ?? {};
-  console.log(req.body);
+
   if (!name) {
     res.status(400).send("Bad request, missing name");
   }
   if (!number) {
     res.status(400).send("Bad request, missing number");
   }
-  const existingName = persons.find((person) => person.name === name);
-  if (existingName) {
-    res
-      .status(400)
-      .send(`Bad request, person with name: ${name} already exists`);
-  }
-  const id = Math.floor(Math.random() * 1000);
-  const person = {
+
+  const person = new Person({
     name,
     number,
-    id,
-  };
-  persons.push(person);
-  res.status(201).json(person);
+  });
+
+  person.save().then((person) => {
+    res.status(201).json(person);
+  });
 });
 
-app.get("/info", (req, res) => {
+app.get("/info", async (req, res) => {
+  const persons = await Person.find({});
   const info = {
     message: `Phonebook has info for ${persons.length} people`,
     date: new Date().toString(),
@@ -103,19 +78,14 @@ app.get("/info", (req, res) => {
   `);
 });
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", async (req, res) => {
   const id = req?.params?.id;
 
   if (!id) {
     res.status(404).send("Bad request, no id provided");
   }
-  const person = persons.find((person) => person.id == id);
-  if (!person) {
-    res.status(404).send(`Person with id ${id} doesn't exist`);
-  }
 
-  persons = persons.filter((person) => person.id != id);
-
+  await Person.findByIdAndDelete(id);
   res.status(204).end();
 });
 
