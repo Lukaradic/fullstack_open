@@ -3,7 +3,7 @@ import { PersonsMap } from "./components/PersonsMap";
 import { PersonForm } from "./components/PersonForm";
 import { PersonsFilter } from "./components/PersonsFilter";
 import { checkIfNameExists, getIdByName } from "./util";
-import notesService from "./services/notes";
+import phonebookService from "./services/phonebook";
 import { Notification } from "./components/Notification";
 
 const App = () => {
@@ -14,7 +14,7 @@ const App = () => {
 
   const fetchPersons = async () => {
     try {
-      const res = await notesService.getAll();
+      const res = await phonebookService.getAll();
       const data = res?.data;
 
       if (data) {
@@ -31,6 +31,7 @@ const App = () => {
   }, []);
 
   const showNotification = (message, type) => {
+    console.log(message);
     if (type === "error") {
       setErrorMessage(message);
       setTimeout(() => setErrorMessage(""), 5000);
@@ -53,15 +54,15 @@ const App = () => {
           if (id === null) {
             return;
           }
-          await notesService.update(id, newPerson);
+          await phonebookService.update(id, newPerson);
         }
       } else {
-        await notesService.create(newPerson);
+        await phonebookService.create(newPerson);
       }
       fetchPersons();
       showNotification(`Added ${newPerson.name}`, "success");
     } catch (error) {
-      const message = error?.message;
+      const message = error?.response?.data?.message ?? error?.message;
       showNotification(message, "error");
     }
   };
@@ -72,7 +73,7 @@ const App = () => {
 
   const handleDelete = async (id) => {
     try {
-      await notesService.delete(id);
+      await phonebookService.delete(id);
       fetchPersons();
     } catch (error) {
       const message = error?.message;

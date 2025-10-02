@@ -1,11 +1,11 @@
 import React from "react";
 
 export const Person = ({ person, handleDelete }) => {
-  const { name, number, id } = person;
+  const { name, number, _id } = person;
 
   const handleDeleteClick = () => {
     if (window.confirm(`Delete ${name}?`)) {
-      handleDelete(id);
+      handleDelete(_id);
     }
   };
 

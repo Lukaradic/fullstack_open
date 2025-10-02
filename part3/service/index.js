@@ -4,6 +4,7 @@ const Person = require("./models/person");
 const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
+const errorHandler = require("./middleware/error");
 
 const fs = require("fs");
 const path = require("path");
@@ -30,13 +31,13 @@ app.get("/api/persons", (req, res) => {
   Person.find({}).then((result) => res.json(result));
 });
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", async (req, res) => {
   const id = req?.params?.id;
 
   if (!id) {
     res.status(404).send("Bad request, no id provided");
   }
-  const person = Person.findById(id);
+  const person = await Person.findById(id);
   if (!person) {
     res.status(404).send(`Person with id ${id} doesn't exist`);
   }
@@ -44,24 +45,27 @@ app.get("/api/persons/:id", (req, res) => {
   res.json(person);
 });
 
-app.post("/api/persons", (req, res) => {
-  const { name, number } = req?.body ?? {};
+app.post("/api/persons", async (req, res, next) => {
+  try {
+    const { name, number } = req?.body ?? {};
 
-  if (!name) {
-    res.status(400).send("Bad request, missing name");
+    if (!name) {
+      res.status(400).send("Bad request, missing name");
+    }
+    if (!number) {
+      res.status(400).send("Bad request, missing number");
+    }
+
+    const person = new Person({
+      name,
+      number,
+    });
+
+    const response = await person.save();
+    res.status(201).json(response);
+  } catch (error) {
+    next(error);
   }
-  if (!number) {
-    res.status(400).send("Bad request, missing number");
-  }
-
-  const person = new Person({
-    name,
-    number,
-  });
-
-  person.save().then((person) => {
-    res.status(201).json(person);
-  });
 });
 
 app.get("/info", async (req, res) => {
@@ -94,3 +98,15 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+app.put("/api/persons/:id", async (req, res) => {
+  const id = req?.params?.id;
+  const { name, number } = req?.body;
+  if (!id) {
+    res.status(404).send("Bad request, no id provided");
+  }
+  await Person.findOneAndUpdate({ name }, { number }, { runValidators: true });
+  res.status(200).json({ _id: id, name, number });
+});
+
+app.use(errorHandler);

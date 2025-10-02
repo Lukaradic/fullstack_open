@@ -7,7 +7,7 @@ export const getIdByName = (personsArray, name) => {
   if (!person) {
     return null;
   }
-  return person.id;
+  return person._id;
 };
 
 export const filterByName = (personsArray, searchTerm) => {
