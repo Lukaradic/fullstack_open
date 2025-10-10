@@ -8,12 +8,16 @@
   "main": "index.js",
   "scripts": {
     "start": "node --watch index.js",
-    "test": "node --test"
+    "dev": "NODE_ENV=development node --watch index.js",
+    "test": "NODE_ENV=test node --test --watch"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "lodash": "^4.17.21",
     "mongoose": "^8.19.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.4"
   }
 }

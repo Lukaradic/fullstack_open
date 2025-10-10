@@ -1,9 +1,16 @@
 import express from "express";
-import { getBlogs, createBlog } from "../controllers/blogController.js";
+import {
+  getAllBlogsController,
+  createBlogController,
+  deleteBlogController,
+  updateBlogLikesController,
+} from "../controllers/blogController.js";
 
 const blogRouter = express.Router();
 
-blogRouter.get(`/api/blogs`, getBlogs);
-blogRouter.post("/api/blogs", createBlog);
+blogRouter.get(`/api/blogs`, getAllBlogsController);
+blogRouter.post("/api/blogs", createBlogController);
+blogRouter.delete("/api/blogs/:id", deleteBlogController);
+blogRouter.put("/api/blogs/:id", updateBlogLikesController);
 
 export default blogRouter;

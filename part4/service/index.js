@@ -1,7 +1,8 @@
 import express from "express";
 import blogRouter from "./src/routes/blogRoutes.js";
+import connection from "./src/config/db.js";
 
-const app = express();
+export const app = express();
 app.use(express.json());
 app.use(blogRouter);
 
