@@ -3,6 +3,7 @@ import assert from "node:assert";
 import { describe, test, beforeEach } from "node:test";
 import { Blog } from "../models/blogModel.js";
 import request from "supertest";
+import { User } from "../models/userModel.js";
 
 const blogObj = {
   title: "Luka test new blog",
@@ -10,10 +11,13 @@ const blogObj = {
   likes: 10,
   url: "https://fullstackopen.com/en/",
 };
+let user = null;
 
 describe("Testing blogs endpoint", () => {
   beforeEach(async () => {
     await Blog.deleteMany({});
+    await User.deleteMany({});
+
     const newBlog = {
       title: "Blog for test",
       author: "Test test",
@@ -22,6 +26,13 @@ describe("Testing blogs endpoint", () => {
     };
     const blogObj = new Blog(newBlog);
     await blogObj.save();
+
+    const registerResponse = await request(app).post("/api/users").send({
+      username: "lukar",
+      password: "1234",
+      name: "Luka Radic",
+    });
+    user = registerResponse.body;
   });
 
   test("Get all blogs should return an array", async () => {
@@ -41,10 +52,12 @@ describe("Testing blogs endpoint", () => {
   });
 
   test("POST /api/blogs should create a blog", async () => {
-    const createResponse = await request(app).post("/api/blogs").send(blogObj);
+    const createResponse = await request(app)
+      .post("/api/blogs")
+      .set("Authorization", user.token)
+      .send(blogObj);
 
     const data = createResponse?.body?.data;
-
     const blogsResponse = await request(app).get("/api/blogs");
     const blogs = blogsResponse?.body?.data;
     const blogsCount = blogs?.length;
@@ -56,7 +69,10 @@ describe("Testing blogs endpoint", () => {
   test("POST /api/blogs should create a blog with 0 likes, if likes is missing from the request body", async () => {
     const obj = { ...blogObj };
     delete obj.likes;
-    const createResponse = await request(app).post("/api/blogs").send(obj);
+    const createResponse = await request(app)
+      .post("/api/blogs")
+      .set("Authorization", user.token)
+      .send(obj);
     const data = createResponse?.body?.data;
 
     assert.equal(0, data.likes);
@@ -67,21 +83,29 @@ describe("Testing blogs endpoint", () => {
     delete obj.title;
     delete obj.url;
 
-    const createResponse = await request(app).post("/api/blogs").send(obj);
+    const createResponse = await request(app)
+      .post("/api/blogs")
+      .set("Authorization", user.token)
+      .send(obj);
 
     assert.strictEqual(400, createResponse.status);
   });
 
   test("DELETE /api/blogs/:id should delete a single resource", async () => {
-    const getBlogsResponse = await request(app).get("/api/blogs");
+    const getBlogsResponse = await request(app)
+      .get("/api/blogs")
+      .set("Authorization", user.token);
     const blogId = getBlogsResponse?.body?.data?.[0]?.id;
-
-    const deleteResponse = await request(app).delete(`/api/blogs/${blogId}`);
+    const deleteResponse = await request(app)
+      .delete(`/api/blogs/${blogId}`)
+      .set("Authorization", user.token);
     assert.strictEqual(204, deleteResponse.status);
   });
 
   test("DELETE /api/blogs/:id should return status 400 if id is not valid", async () => {
-    const deleteResponse = await request(app).delete("/api/blogs/1234");
+    const deleteResponse = await request(app)
+      .delete("/api/blogs/1234")
+      .set("Authorization", user.token);
     assert.strictEqual(400, deleteResponse.status);
   });
 

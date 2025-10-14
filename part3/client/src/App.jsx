@@ -31,7 +31,6 @@ const App = () => {
   }, []);
 
   const showNotification = (message, type) => {
-    console.log(message);
     if (type === "error") {
       setErrorMessage(message);
       setTimeout(() => setErrorMessage(""), 5000);
