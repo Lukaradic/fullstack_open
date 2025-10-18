@@ -62,9 +62,9 @@ export const deleteBlogController = async (req, res) => {
 export const updateBlogLikesController = async (req, res) => {
   try {
     const { id } = req?.params || {};
-    const { likes } = req?.body || {};
+    const data = req.body;
 
-    const response = await updateBlog(id, { likes });
+    const response = await updateBlog(id, data);
     res.status(201).json({ data: response });
   } catch (error) {
     res.status(400).json({ message: error.message });

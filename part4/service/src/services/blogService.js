@@ -23,6 +23,18 @@ export const deleteBlog = async (id, userId) => {
   return response;
 };
 
-export const updateBlog = async (id, { likes }) => {
-  return await Blog.findByIdAndUpdate(id, { likes }, { new: true });
+export const updateBlog = async (id, data) => {
+  const { title, author, url, likes, user } = data;
+  const newLikes = likes + 1;
+  return await Blog.findByIdAndUpdate(
+    id,
+    {
+      title,
+      author,
+      user,
+      url,
+      likes: newLikes,
+    },
+    { new: true, populate: "user" }
+  );
 };

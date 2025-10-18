@@ -21,4 +21,29 @@ const create = async (data) => {
   }
 };
 
-export default { getAll, create };
+const like = async (data) => {
+  try {
+    const res = await axios.put(`${baseUrl}/${data.id}`, {
+      ...data,
+      user: data.user.id,
+    });
+
+    return res;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+const deleteBlog = async (id) => {
+  try {
+    const token = localStorage.getItem("userToken");
+    await axios.delete(`${baseUrl}/${id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+export default { getAll, create, like, deleteBlog };

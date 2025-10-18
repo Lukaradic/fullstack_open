@@ -32,17 +32,20 @@ const App = () => {
 
   const getBlogs = async () => {
     const res = await blogService.getAll();
-    setBlogs(res?.data);
+    const blogs = res?.data.sort((a, b) => b.likes - a.likes);
+    setBlogs(blogs);
   };
 
   useEffect(() => {
     const token = getTokenFromStorage();
     if (token) {
       const user = getUserFromStorage();
-      setUser(user);
+      setUser(JSON.parse(user));
       getBlogs();
     }
   }, []);
+
+  console.log();
 
   const handleNotification = (type, text) => {
     setNotification({ type, text });
@@ -82,6 +85,33 @@ const App = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await blogService.deleteBlog(id);
+      const cloned = [...blogs];
+      const blogIndex = cloned.findIndex((blog) => blog.id === id);
+      cloned.splice(blogIndex, 1);
+      setBlogs(cloned);
+      handleNotification("success", "Deleted blog");
+    } catch (err) {
+      console.error(err);
+      handleNotification("error", "Failed to delete");
+    }
+  };
+
+  const handleLike = async (data) => {
+    try {
+      const res = await blogService.like(data);
+      const cloned = [...blogs];
+      const blogIndex = cloned.findIndex((blog) => blog.id === data.id);
+      cloned.splice(blogIndex, 1, res.data.data);
+      setBlogs(cloned);
+    } catch (err) {
+      console.error(err);
+      handleNotification("error", "Failed to like");
+    }
+  };
+
   return (
     <div>
       {notification && <Notification notification={notification} />}
@@ -92,7 +122,12 @@ const App = () => {
         <>
           <CreateBlog handleCreate={handleCreate} />
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLike={handleLike}
+              handleDelete={handleDelete}
+            />
           ))}
         </>
       )}

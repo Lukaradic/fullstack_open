@@ -7,6 +7,8 @@ export const CreateBlog = ({ handleCreate }) => {
     author: "",
   });
 
+  const [show, setShow] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -19,57 +21,68 @@ export const CreateBlog = ({ handleCreate }) => {
     handleCreate(formData);
   };
 
+  if (!show) {
+    return (
+      <div>
+        <button onClick={() => setShow(true)}>create new blog</button>
+      </div>
+    );
+  }
+
   return (
-    <form>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <label htmlFor="title">Title</label>
-            </td>
-            <td>
-              <input
-                type="text"
-                name="title"
-                id="title"
-                value={formData.title}
-                onChange={handleChange}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label htmlFor="author">Author</label>
-            </td>
-            <td>
-              <input
-                type="text"
-                name="author"
-                id="author"
-                value={formData.author}
-                onChange={handleChange}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label htmlFor="url">Url</label>
-            </td>
-            <td>
-              <input
-                type="text"
-                name="url"
-                id="url"
-                value={formData.url}
-                onChange={handleChange}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button type="submit" onClick={handleSubmit}>
-        Create
-      </button>
-    </form>
+    <>
+      <form>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <label htmlFor="title">Title</label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="title"
+                  id="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label htmlFor="author">Author</label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="author"
+                  id="author"
+                  value={formData.author}
+                  onChange={handleChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label htmlFor="url">Url</label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="url"
+                  id="url"
+                  value={formData.url}
+                  onChange={handleChange}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="submit" onClick={handleSubmit}>
+          Create
+        </button>
+      </form>
+      <button onClick={() => setShow(false)}>cancel</button>
+    </>
   );
 };
