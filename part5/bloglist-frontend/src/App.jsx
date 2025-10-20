@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import Blog from "./components/Blog";
-import blogService from "./services/blogs";
-import { login } from "./services/user";
-import { LoginForm } from "./components/LoginForm";
-import { UserInfo } from "./components/UserInfo";
-import { Notification } from "./components/Notification";
-import { CreateBlog } from "./components/CreateBlog";
+import { useState, useEffect } from 'react';
+import Blog from './components/Blog';
+import blogService from './services/blogs';
+import { login } from './services/user';
+import { LoginForm } from './components/LoginForm';
+import { UserInfo } from './components/UserInfo';
+import { Notification } from './components/Notification';
+import { CreateBlog } from './components/CreateBlog';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -13,21 +13,21 @@ const App = () => {
   const [notification, setNotification] = useState(null);
 
   const setTokenToStorage = (token, userData) => {
-    localStorage.setItem("userToken", token);
-    localStorage.setItem("userData", JSON.stringify(userData));
+    localStorage.setItem('userToken', token);
+    localStorage.setItem('userData', JSON.stringify(userData));
   };
 
   const getTokenFromStorage = () => {
-    return localStorage.getItem("userToken");
+    return localStorage.getItem('userToken');
   };
 
   const getUserFromStorage = () => {
-    return localStorage.getItem("userData");
+    return localStorage.getItem('userData');
   };
 
   const removeUserFromStorage = () => {
-    localStorage.removeItem("userData");
-    localStorage.removeItem("userToken");
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userToken');
   };
 
   const getBlogs = async () => {
@@ -62,7 +62,7 @@ const App = () => {
       setUser(data);
     } catch (error) {
       console.error(error);
-      handleNotification("error", "wrong username or password");
+      handleNotification('error', 'wrong username or password');
     }
   };
 
@@ -75,13 +75,13 @@ const App = () => {
     try {
       const res = await blogService.create(data);
       handleNotification(
-        "success",
+        'success',
         `a new blog ${res?.data?.title} by ${res?.data?.author} added`
       );
       await getBlogs();
     } catch (err) {
       console.error(err);
-      handleNotification("error", "Failed to create");
+      handleNotification('error', 'Failed to create');
     }
   };
 
@@ -92,10 +92,10 @@ const App = () => {
       const blogIndex = cloned.findIndex((blog) => blog.id === id);
       cloned.splice(blogIndex, 1);
       setBlogs(cloned);
-      handleNotification("success", "Deleted blog");
+      handleNotification('success', 'Deleted blog');
     } catch (err) {
       console.error(err);
-      handleNotification("error", "Failed to delete");
+      handleNotification('error', 'Failed to delete');
     }
   };
 
@@ -108,7 +108,7 @@ const App = () => {
       setBlogs(cloned);
     } catch (err) {
       console.error(err);
-      handleNotification("error", "Failed to like");
+      handleNotification('error', 'Failed to like');
     }
   };
 

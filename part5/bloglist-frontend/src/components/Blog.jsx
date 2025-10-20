@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 const blogStyle = {
   paddingTop: 10,
   paddingLeft: 2,
-  border: "solid",
+  border: 'solid',
   borderWidth: 1,
   marginTop: 10,
   marginBottom: 5,
@@ -12,7 +12,7 @@ const blogStyle = {
 const Blog = ({ blog, handleLike, handleDelete }) => {
   const [showDetails, setShowDetails] = useState(false);
 
-  const buttonTitle = showDetails ? "hide" : "view";
+  const buttonTitle = showDetails ? 'hide' : 'view';
 
   const handleLikleClick = () => {
     handleLike(blog);
@@ -24,8 +24,9 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   };
   return (
     <div style={blogStyle}>
-      {blog.title}
+      <p data-testid="blog--title">{blog.title}</p>
       <button
+        data-testid="blog--btn__show-details"
         style={{ marginLeft: 4 }}
         onClick={() => setShowDetails(!showDetails)}
       >
@@ -33,12 +34,17 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
       </button>
       {showDetails && (
         <div>
-          <p>{blog.url}</p>
-          <p>
-            {blog.likes} <button onClick={handleLikleClick}>like</button>
+          <p data-testid="blog--url">{blog.url}</p>
+          <p data-testid="blog--likes">
+            {blog.likes}{' '}
+            <button data-testid="blog--btn__like" onClick={handleLikleClick}>
+              like
+            </button>
           </p>
-          <p>{blog.author}</p>
-          <button onClick={handleDeleteClick}>Delete</button>
+          <p data-testid="blog--author">{blog.author}</p>
+          <button data-testid="blog--btn__delete" onClick={handleDeleteClick}>
+            Delete
+          </button>
         </div>
       )}
     </div>

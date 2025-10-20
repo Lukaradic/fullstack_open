@@ -1,5 +1,5 @@
-import axios from "axios";
-const baseUrl = "/api/blogs";
+import axios from 'axios';
+const baseUrl = '/api/blogs';
 
 const getAll = () => {
   const request = axios.get(baseUrl);
@@ -8,11 +8,11 @@ const getAll = () => {
 
 const create = async (data) => {
   try {
-    const token = localStorage.getItem("userToken");
+    const token = localStorage.getItem('userToken');
     const res = await axios.post(baseUrl, data, {
       headers: {
         Authorization: token,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     return res;
@@ -36,7 +36,7 @@ const like = async (data) => {
 
 const deleteBlog = async (id) => {
   try {
-    const token = localStorage.getItem("userToken");
+    const token = localStorage.getItem('userToken');
     await axios.delete(`${baseUrl}/${id}`, {
       headers: {
         Authorization: token,

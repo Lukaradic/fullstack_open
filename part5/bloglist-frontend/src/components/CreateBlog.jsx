@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 export const CreateBlog = ({ handleCreate }) => {
   const [formData, setFormData] = useState({
-    title: "",
-    url: "",
-    author: "",
+    title: '',
+    url: '',
+    author: '',
   });
 
   const [show, setShow] = useState(false);
@@ -24,7 +24,12 @@ export const CreateBlog = ({ handleCreate }) => {
   if (!show) {
     return (
       <div>
-        <button onClick={() => setShow(true)}>create new blog</button>
+        <button
+          data-testid="create-blog--btn__show"
+          onClick={() => setShow(true)}
+        >
+          create new blog
+        </button>
       </div>
     );
   }
@@ -43,6 +48,7 @@ export const CreateBlog = ({ handleCreate }) => {
                   type="text"
                   name="title"
                   id="title"
+                  data-testid="create-blog--title"
                   value={formData.title}
                   onChange={handleChange}
                 />
@@ -57,6 +63,7 @@ export const CreateBlog = ({ handleCreate }) => {
                   type="text"
                   name="author"
                   id="author"
+                  data-testid="create-blog--author"
                   value={formData.author}
                   onChange={handleChange}
                 />
@@ -71,6 +78,7 @@ export const CreateBlog = ({ handleCreate }) => {
                   type="text"
                   name="url"
                   id="url"
+                  data-testid="create-blog--url"
                   value={formData.url}
                   onChange={handleChange}
                 />
@@ -78,7 +86,11 @@ export const CreateBlog = ({ handleCreate }) => {
             </tr>
           </tbody>
         </table>
-        <button type="submit" onClick={handleSubmit}>
+        <button
+          data-testid="create-blog--btn__submit"
+          type="submit"
+          onClick={handleSubmit}
+        >
           Create
         </button>
       </form>
