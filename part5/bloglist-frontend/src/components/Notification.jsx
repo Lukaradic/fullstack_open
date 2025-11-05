@@ -3,9 +3,8 @@ import React from 'react';
 export const Notification = ({ notification }) => {
   const { type, text } = notification;
 
-  console.log(notification);
   return (
-    <div className={`notification ${type}`}>
+    <div className={`notification ${type}`} data-testid="notification">
       <p>{text}</p>
     </div>
   );

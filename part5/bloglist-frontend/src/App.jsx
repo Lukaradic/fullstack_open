@@ -45,8 +45,6 @@ const App = () => {
     }
   }, []);
 
-  console.log();
-
   const handleNotification = (type, text) => {
     setNotification({ type, text });
     setTimeout(() => {
@@ -60,6 +58,7 @@ const App = () => {
       const { token, data } = res.data;
       setTokenToStorage(token, data);
       setUser(data);
+      getBlogs();
     } catch (error) {
       console.error(error);
       handleNotification('error', 'wrong username or password');
@@ -76,7 +75,7 @@ const App = () => {
       const res = await blogService.create(data);
       handleNotification(
         'success',
-        `a new blog ${res?.data?.title} by ${res?.data?.author} added`
+        `a new blog ${res?.data?.data?.title} by ${res?.data?.data?.author} added`
       );
       await getBlogs();
     } catch (err) {
@@ -91,6 +90,7 @@ const App = () => {
       const cloned = [...blogs];
       const blogIndex = cloned.findIndex((blog) => blog.id === id);
       cloned.splice(blogIndex, 1);
+      cloned.sort((a, b) => b.likes - a.likes);
       setBlogs(cloned);
       handleNotification('success', 'Deleted blog');
     } catch (err) {
@@ -127,6 +127,7 @@ const App = () => {
               blog={blog}
               handleLike={handleLike}
               handleDelete={handleDelete}
+              userId={user.id}
             />
           ))}
         </>

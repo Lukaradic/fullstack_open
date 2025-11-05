@@ -19,6 +19,12 @@ export const CreateBlog = ({ handleCreate }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleCreate(formData);
+    setShow(false);
+    setFormData({
+      title: '',
+      url: '',
+      author: '',
+    });
   };
 
   if (!show) {

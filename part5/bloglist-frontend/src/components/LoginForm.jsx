@@ -25,6 +25,7 @@ export const LoginForm = ({ handleLogin }) => {
           id="username"
           value={formData.username}
           onChange={handleChange}
+          data-testid="form--username"
         />
       </div>
       <div>
@@ -35,9 +36,12 @@ export const LoginForm = ({ handleLogin }) => {
           id="password"
           value={formData.password}
           onChange={handleChange}
+          data-testid="form--password"
         />
       </div>
-      <button type="submit">Login</button>
+      <button type="submit" data-testid="form--button__submit">
+        Login
+      </button>
     </form>
   );
 };

@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import isNil from "lodash/isNil.js";
 import { User } from "../models/userModel.js";
+import { Blog } from "../models/blogModel.js";
 
 export const getUserByUsername = async (username) => {
   const user = await User.findOne({ username });
@@ -25,4 +26,9 @@ export const createUser = async ({ username, name, password }) => {
   });
 
   return await user.save();
+};
+
+export const testUsers = async () => {
+  await User.deleteMany({});
+  await Blog.deleteMany({});
 };

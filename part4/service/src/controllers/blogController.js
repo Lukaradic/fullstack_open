@@ -17,7 +17,7 @@ export const getAllBlogsController = async (_, res, next) => {
 export const createBlogController = async (req, res, next) => {
   try {
     const { title, url, likes = 0 } = req.body || {};
-    const { name, id: userId } = req.user || {};
+    const { username: name, id: userId } = req.user || {};
 
     if (!userId) {
       res.status(401).json({ success: false, message: "Unauthorized" });

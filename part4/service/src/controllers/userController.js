@@ -6,6 +6,7 @@ import {
   createUser,
   getAllUsers,
   getUserByUsername,
+  testUsers,
 } from "../services/userService.js";
 
 export const createUserController = async (req, res, next) => {
@@ -73,6 +74,16 @@ export const loginUserController = async (req, res, next) => {
     const token = jwt.sign(userData, process.env.JWT_SECRET);
     res.status(200).json({ success: true, data: userData, token });
   } catch (error) {
+    res.status(500).end();
+  }
+};
+
+export const testUsersController = async (_, res) => {
+  try {
+    await testUsers();
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.log(error, "errors");
     res.status(500).end();
   }
 };

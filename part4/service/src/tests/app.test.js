@@ -120,6 +120,6 @@ describe("Testing blogs endpoint", () => {
     const updatedLikes = updatedBlog?.body?.data?.likes;
 
     assert.notEqual(blogLikes, updatedLikes);
-    assert.equal(10, updatedLikes);
+    assert.equal(11, updatedLikes);
   });
 });

@@ -9,7 +9,7 @@ const blogStyle = {
   marginBottom: 5,
 };
 
-const Blog = ({ blog, handleLike, handleDelete }) => {
+const Blog = ({ blog, handleLike, handleDelete, userId }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const buttonTitle = showDetails ? 'hide' : 'view';
@@ -22,8 +22,11 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
       handleDelete(blog.id);
     }
   };
+
+  const canDelete = userId === blog?.user?.id;
+
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} data-testid="blog--container" id={blog.id}>
       <p data-testid="blog--title">{blog.title}</p>
       <button
         data-testid="blog--btn__show-details"
@@ -42,9 +45,11 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
             </button>
           </p>
           <p data-testid="blog--author">{blog.author}</p>
-          <button data-testid="blog--btn__delete" onClick={handleDeleteClick}>
-            Delete
-          </button>
+          {canDelete && (
+            <button data-testid="blog--btn__delete" onClick={handleDeleteClick}>
+              Delete
+            </button>
+          )}
         </div>
       )}
     </div>
