@@ -17,46 +17,29 @@ const asObject = (anecdote) => {
   };
 };
 
-const sortByVotes = (anecdotes) => {
-  return anecdotes.sort((a, b) => b.votes - a.votes);
-};
-
-export const createAnecdote = (text) => {
-  return {
-    type: "ADD",
-    payload: {
-      anecdote: text,
-    },
-  };
-};
-
-const voteAction = (state, id) => {
-  const cloned = [...state];
-  const aneecdote = cloned.find((el) => el.id === id);
-  aneecdote.votes++;
-  sortByVotes(cloned);
-  return cloned;
-};
-
-const addAnecdoteAction = (state, anecdote) => {
-  const cloned = [...state];
-  cloned.push(asObject(anecdote));
-  sortByVotes(cloned);
-  return cloned;
-};
-
 const initialState = anecdotesAtStart.map(asObject);
 
-const reducer = (state = initialState, action) => {
-  const { type, payload } = action;
-  switch (type) {
-    case "VOTE":
-      return voteAction(state, payload.id);
-    case "ADD":
-      return addAnecdoteAction(state, payload.anecdote);
-    default:
-      return state;
-  }
-};
+import { createSlice } from "@reduxjs/toolkit";
 
-export default reducer;
+const anecdotesSlice = createSlice({
+  name: "anecdote",
+  initialState,
+  reducers: {
+    vote(state, action) {
+      const { payload } = action;
+      const { id } = payload;
+
+      const aneecdote = state.find((el) => el.id === id);
+      aneecdote.votes++;
+      state.sort((a, b) => b.votes - a.votes);
+    },
+    add(state, action) {
+      const { payload } = action;
+      const { anecdote } = payload;
+      state.push(asObject(anecdote));
+    },
+  },
+});
+
+export const { vote, add } = anecdotesSlice.actions;
+export default anecdotesSlice.reducer;

@@ -1,23 +1,44 @@
-import React from "react";
+import React, { useMemo } from "react";
 
-import { useSelector, useStore } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { Filter } from "./Filter";
+import { vote } from "../reducers/anecdoteReducer";
+import { displayNotification } from "../reducers/notificationReducer";
+
 export const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => state);
-  const store = useStore();
+  const dispatch = useDispatch();
+  const anecdotes = useSelector((state) => state.anecdotes);
+  const filter = useSelector((state) => state.filter);
 
-  const vote = (id) => {
-    store.dispatch({ type: "VOTE", payload: { id } });
+  const handleVote = (id, content) => {
+    dispatch(vote({ id }));
+    dispatch(displayNotification(`You voted for: ${content}`));
   };
+
+  const filteredAnecodtes = useMemo(() => {
+    if (!filter) {
+      return anecdotes;
+    }
+
+    const cloned = [...anecdotes];
+
+    return cloned.filter((el) =>
+      el.content.toLowerCase().includes(filter.term.toLowerCase())
+    );
+  }, [anecdotes, filter]);
 
   return (
     <>
       <h2>Anecdotes</h2>
-      {anecdotes.map((anecdote) => (
-        <div key={anecdote.id}>
+      <Filter />
+      {filteredAnecodtes.map((anecdote) => (
+        <div key={anecdote.id} style={{ padding: 12, marginBottom: 8 }}>
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => handleVote(anecdote.id, anecdote.content)}>
+              vote
+            </button>
           </div>
         </div>
       ))}

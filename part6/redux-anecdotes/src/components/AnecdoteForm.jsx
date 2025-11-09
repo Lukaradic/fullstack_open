@@ -1,21 +1,22 @@
 import React from "react";
-import { useStore } from "react-redux";
-
-import { createAnecdote } from "../reducers/anecdoteReducer";
+import { useDispatch } from "react-redux";
+import { add } from "../reducers/anecdoteReducer";
+import { displayNotification } from "../reducers/notificationReducer";
 
 export const AnecdoteForm = () => {
-  const store = useStore();
+  const dispatch = useDispatch();
 
-  const add = (e) => {
+  const handleAdd = (e) => {
     e.preventDefault();
     const input = document.getElementById("anecdote");
-    store.dispatch(createAnecdote(input.value));
+    dispatch(add({ anecdote: input.value }));
+    dispatch(displayNotification(`You created: ${input.value}`));
     input.value = "";
   };
   return (
     <>
       <h2>create new</h2>
-      <form onSubmit={add}>
+      <form onSubmit={handleAdd}>
         <div>
           <input type="text" id="anecdote" />
         </div>
