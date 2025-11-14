@@ -1,17 +1,22 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { add } from "../reducers/anecdoteReducer";
 import { displayNotification } from "../reducers/notificationReducer";
+import { createAnecdoteAction } from "../reducers/anecdoteReducer";
 
 export const AnecdoteForm = () => {
   const dispatch = useDispatch();
 
-  const handleAdd = (e) => {
-    e.preventDefault();
-    const input = document.getElementById("anecdote");
-    dispatch(add({ anecdote: input.value }));
-    dispatch(displayNotification(`You created: ${input.value}`));
-    input.value = "";
+  const handleAdd = async (e) => {
+    try {
+      e.preventDefault();
+      const input = document.getElementById("anecdote");
+      const content = input.value;
+      dispatch(createAnecdoteAction(content));
+      dispatch(displayNotification(`You created: ${content}`));
+      input.value = "";
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
     <>

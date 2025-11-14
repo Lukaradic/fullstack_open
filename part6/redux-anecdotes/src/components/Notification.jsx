@@ -11,7 +11,6 @@ const Notification = () => {
   const notification = useSelector((state) => state.notification);
   const { text } = notification;
 
-  console.log(notification);
   if (!text) {
     return null;
   }
