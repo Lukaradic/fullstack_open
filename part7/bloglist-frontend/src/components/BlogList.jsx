@@ -2,7 +2,6 @@ import React from 'react';
 import Blog from './Blog';
 import { useDispatch, useSelector } from 'react-redux';
 import { displayNotification } from '../reducers/notificationSlice';
-
 import blogService from '../services/blogs';
 
 export const BlogList = ({ user, getBlogs }) => {

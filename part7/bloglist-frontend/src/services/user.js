@@ -7,9 +7,17 @@ const login = async ({ username, password }) => {
     const res = await axios.post(`${baseUrl}/login`, { username, password });
     return res;
   } catch (error) {
-    console.error(error);
     throw new Error(error);
   }
 };
 
-export default { login };
+const getUsers = async () => {
+  try {
+    const res = await axios.get(baseUrl);
+    return res.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export default { login, getUsers };

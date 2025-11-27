@@ -1,17 +1,18 @@
 import { useEffect, useCallback } from 'react';
 import blogService from './services/blogs';
-import { LoginForm } from './components/LoginForm';
-import { UserInfo } from './components/UserInfo';
+
 import { Notification } from './components/Notification';
-import { CreateBlog } from './components/CreateBlog';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { BlogList } from './components/BlogList';
 
 import { setBlogs } from './reducers/blogSlice';
-import { checkStorageForUserData, setUserData } from './reducers/authSlice';
-import { setNotification } from './reducers/notificationSlice';
-import userService from './services/user';
+import { checkStorageForUserData } from './reducers/authSlice';
+import { Route, Routes } from 'react-router';
+import { UsersInfo } from './components/UsersInfo';
+import { HomePage } from './pages/HomePage';
+import { UserPage } from './pages/UserPage';
+import { BlogPage } from './pages/BlogPage';
+import { Navigation } from './components/Navigation';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -35,29 +36,22 @@ const App = () => {
     }
   }, [getBlogs, user]);
 
-  const loginUser = async (formData) => {
-    try {
-      const res = await userService.login(formData);
-      const { token, data } = res.data;
-      dispatch(setUserData(data, token));
-    } catch (error) {
-      console.error(error);
-      dispatch(setNotification('error', 'Failed to login'));
-    }
-  };
-
   return (
     <div>
       <Notification />
-      {user && <UserInfo name={user?.username} />}
-      <h2>blogs</h2>
-      {!user && <LoginForm handleLogin={loginUser} />}
-      {user && (
-        <>
-          <CreateBlog getBlogs={getBlogs} />
-          <BlogList user={user} getBlogs={getBlogs} />
-        </>
-      )}
+      <Navigation />
+      <Routes>
+        <Route
+          path="/"
+          element={<HomePage user={user} getBlogs={getBlogs} />}
+        />
+        <Route path="users" element={<UsersInfo />} />
+        <Route path="users/:id" element={<UserPage />} />
+        <Route
+          path="blogs/:id"
+          element={<BlogPage user={user} getBlogs={getBlogs} />}
+        />
+      </Routes>
     </div>
   );
 };
