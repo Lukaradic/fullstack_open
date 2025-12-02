@@ -1,5 +1,6 @@
 import { Blog } from "../models/blogModel.js";
 import { User } from "../models/userModel.js";
+import { Comment } from "../models/commentModel.js";
 
 export const getAll = async () => {
   return await Blog.find({}).populate("user");
@@ -37,4 +38,19 @@ export const updateBlog = async (id, data) => {
     },
     { new: true, populate: "user" }
   );
+};
+
+export const getComments = async (id) => {
+  return await Comment.find({ blog: id });
+};
+
+export const createComment = async (id, content) => {
+  const commentObj = new Comment({
+    content,
+    blog: id,
+  });
+  const savedComment = await commentObj.save();
+  await Blog.findByIdAndUpdate(id, { $push: { comments: commentObj._id } });
+
+  return savedComment;
 };

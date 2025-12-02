@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-
 import { useParams, useNavigate } from 'react-router';
 
 export const UserPage = () => {

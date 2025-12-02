@@ -35,7 +35,7 @@ export const BlogList = ({ user, getBlogs }) => {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       {blogs.map((blog) => (
         <Blog
           key={blog.id}
@@ -45,6 +45,6 @@ export const BlogList = ({ user, getBlogs }) => {
           userId={user.id}
         />
       ))}
-    </>
+    </div>
   );
 };

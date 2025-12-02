@@ -8,11 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setBlogs } from './reducers/blogSlice';
 import { checkStorageForUserData } from './reducers/authSlice';
 import { Route, Routes } from 'react-router';
-import { UsersInfo } from './components/UsersInfo';
+import { UsersPage } from './pages/UsersPage';
 import { HomePage } from './pages/HomePage';
 import { UserPage } from './pages/UserPage';
 import { BlogPage } from './pages/BlogPage';
 import { Navigation } from './components/Navigation';
+import { LoginPage } from './pages/LoginPage';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -45,12 +46,13 @@ const App = () => {
           path="/"
           element={<HomePage user={user} getBlogs={getBlogs} />}
         />
-        <Route path="users" element={<UsersInfo />} />
+        <Route path="users" element={<UsersPage />} />
         <Route path="users/:id" element={<UserPage />} />
         <Route
           path="blogs/:id"
           element={<BlogPage user={user} getBlogs={getBlogs} />}
         />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </div>
   );

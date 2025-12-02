@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { displayNotification } from '../reducers/notificationSlice';
 import blogService from '../services/blogs';
+import { Button } from './common/Button';
+import { Input } from './common/Input';
 
 export const CreateBlog = ({ getBlogs }) => {
   const dispatch = useDispatch();
@@ -51,77 +53,64 @@ export const CreateBlog = ({ getBlogs }) => {
   if (!show) {
     return (
       <div>
-        <button
+        <Button
           data-testid="create-blog--btn__show"
           onClick={() => setShow(true)}
-        >
-          create new blog
-        </button>
+          text="Create new blog"
+        />
       </div>
     );
   }
 
   return (
-    <>
-      <form>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <label htmlFor="title">Title</label>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  name="title"
-                  id="title"
-                  data-testid="create-blog--title"
-                  value={formData.title}
-                  onChange={handleChange}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label htmlFor="author">Author</label>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  name="author"
-                  id="author"
-                  data-testid="create-blog--author"
-                  value={formData.author}
-                  onChange={handleChange}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label htmlFor="url">Url</label>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  name="url"
-                  id="url"
-                  data-testid="create-blog--url"
-                  value={formData.url}
-                  onChange={handleChange}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <button
-          data-testid="create-blog--btn__submit"
-          type="submit"
-          onClick={handleSubmit}
-        >
-          Create
-        </button>
-      </form>
-      <button onClick={() => setShow(false)}>cancel</button>
-    </>
+    <div className="flex flex-col gap-8  w-md justify-center">
+      <div className="space-y-6">
+        <div>
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Title
+          </label>
+          <Input
+            value={formData.title}
+            onChange={handleChange}
+            name="title"
+            id="title"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="author"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Author
+          </label>
+          <Input
+            value={formData.author}
+            onChange={handleChange}
+            name="author"
+            id="author"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="url"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Url
+          </label>
+          <Input
+            value={formData.url}
+            onChange={handleChange}
+            name="url"
+            id="url"
+          />
+        </div>
+      </div>
+      <Button onClick={handleSubmit} type="submit" text="Create" />
+      <Button onClick={() => setShow(false)} text="Cancel" />
+    </div>
   );
 };

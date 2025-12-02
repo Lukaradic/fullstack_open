@@ -3,6 +3,8 @@ import {
   create,
   deleteBlog,
   updateBlog,
+  createComment,
+  getComments,
 } from "../services/blogService.js";
 
 export const getAllBlogsController = async (_, res, next) => {
@@ -68,5 +70,26 @@ export const updateBlogLikesController = async (req, res) => {
     res.status(201).json({ data: response });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+export const getCommentsController = async (req, res) => {
+  try {
+    const blogId = req?.params?.id;
+    const response = await getComments(blogId);
+    res.status(200).json({ data: response });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+export const createCommentController = async (req, res) => {
+  try {
+    const blogId = req.params.id;
+    const content = req?.body?.content;
+    const response = await createComment(blogId, content);
+    res.status(201).json({ data: response });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };

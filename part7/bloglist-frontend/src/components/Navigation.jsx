@@ -1,42 +1,35 @@
 import React from 'react';
-import userService from '../services/user';
-import { LoginForm } from './LoginForm';
 import { UserInfo } from './UserInfo';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserData } from '../reducers/authSlice';
-import { setNotification } from '../reducers/notificationSlice';
-
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
+import { Button } from './common/Button';
+
 export const Navigation = () => {
   const authState = useSelector((state) => state.auth);
-  const user = authState?.user || {};
+  const user = authState?.user;
 
-  const dispatch = useDispatch();
-  const loginUser = async (formData) => {
-    try {
-      const res = await userService.login(formData);
-      const { token, data } = res.data;
-      dispatch(setUserData(data, token));
-    } catch (error) {
-      console.error(error);
-      dispatch(setNotification('error', 'Failed to login'));
-    }
-  };
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 4,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-      }}
-    >
-      <Link to="/">blogs</Link>
-      <Link to="/users">users</Link>
+    <div className="flex gap-2 px-6 py-2 bg-gray-100 items-center">
+      <div className="flex-1 gap-2 flex">
+        <Link
+          className="border-b-2 hover:border-black border-transparent"
+          to="/"
+        >
+          blogs
+        </Link>
+        <Link
+          className="border-b-2 hover:border-black border-transparent"
+          to="/users"
+        >
+          users
+        </Link>
+      </div>
       {user && <UserInfo name={user?.username} />}
-      {!user && <LoginForm handleLogin={loginUser} />}
+      {!user && (
+        <Button>
+          <Link to="/login">Login</Link>
+        </Button>
+      )}
     </div>
   );
 };
