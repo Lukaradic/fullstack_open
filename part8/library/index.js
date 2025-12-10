@@ -115,6 +115,7 @@ const typeDefs = /* GraphQL */ `
   type AllAuthors {
     name: String!
     bookCount: Int!
+    born: Int
   }
 
   type Query {
@@ -157,20 +158,14 @@ const resolvers = {
       return clonedBooks;
     },
     allAuthors: () => {
-      const map = new Map();
-
-      books.forEach((book) => {
-        if (map.hasOwnProperty(book.author)) {
-          map[book.author]++;
-        } else {
-          map[book.author] = 1;
-        }
-      });
-
-      return Object.keys(map).map((author) => {
+      return authors.map((author) => {
+        const authorsBooks = books.filter(
+          (book) => book.author === author.name
+        );
         return {
-          name: author,
-          bookCount: map[author],
+          name: author.name,
+          bookCount: authorsBooks.length,
+          born: author.born,
         };
       });
     },
@@ -185,12 +180,13 @@ const resolvers = {
     editAuthor: (_, args) => {
       const { author, setBornTo } = args;
 
-      const filteredAuthor = authors.find((el) => el.name === author);
-      if (!filteredAuthor) {
+      const filteredAuthorIndex = authors.findIndex((el) => el.name === author);
+
+      if (filteredAuthorIndex === -1) {
         return null;
       }
-      filteredAuthor.born = setBornTo;
-      return filteredAuthor;
+      authors[filteredAuthorIndex].born = setBornTo;
+      return authors[filteredAuthorIndex];
     },
   },
 };
