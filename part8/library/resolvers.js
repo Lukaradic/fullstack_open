@@ -41,9 +41,15 @@ export const resolvers = {
         };
       });
     },
+    me: async (root, args, context) => {
+      return context.currentUser;
+    },
   },
   Mutation: {
-    addBook: async (_, args) => {
+    addBook: async (_, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Unauthenticated, please log in ");
+      }
       const { title, author: authorName, published, genres } = args;
 
       if (title?.length < 5) {
@@ -66,8 +72,10 @@ export const resolvers = {
       return newBook;
     },
     editAuthor: async (_, args) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Unauthenticated, please log in ");
+      }
       const { author, setBornTo } = args;
-
       const updatedAuthor = await Author.findOneAndUpdate(
         { name: author },
         { bord: setBornTo },

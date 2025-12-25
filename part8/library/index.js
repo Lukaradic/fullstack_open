@@ -2,6 +2,8 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { server } from "./server.js";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
+import { User } from "./mongoose/User.js";
 
 dotenv.config();
 
@@ -19,6 +21,15 @@ mongoose
 
 startStandaloneServer(server, {
   listen: { port: 4000 },
+  context: async ({ req }) => {
+    const authToken = req?.headers?.authorization ?? null;
+
+    if (authToken) {
+      const decodedToken = jwt.verify(authToken, process.env.JWT_SECRET);
+      const currentUser = await User.findById(decodedToken.id);
+      return { currentUser };
+    }
+  },
 }).then(({ url }) => {
   console.log(`Server ready at ${url}`);
 });

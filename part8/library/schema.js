@@ -34,6 +34,7 @@ export const typeDefs = /* GraphQL */ `
     authorCount: Int!
     allBooks(author: String, genre: String): [Book]
     allAuthors: [AllAuthors]
+    me: User
   }
 
   type Mutation {
