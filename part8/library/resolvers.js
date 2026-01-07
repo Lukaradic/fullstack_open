@@ -1,8 +1,11 @@
-import { Book } from "./mongoose/Book.js";
-import { Author } from "./mongoose/Author.js";
-import { User } from "./mongoose/User.js";
 import { GraphQLError } from "graphql";
+import { PubSub } from "graphql-subscriptions";
 import jwt from "jsonwebtoken";
+import { Author } from "./mongoose/Author.js";
+import { Book } from "./mongoose/Book.js";
+import { User } from "./mongoose/User.js";
+
+const pubSub = new PubSub();
 
 export const resolvers = {
   Query: {
@@ -16,7 +19,6 @@ export const resolvers = {
     },
     allBooks: async (_, args) => {
       const { author, genre } = args;
-      console.log(author, genre);
       const mongooseFilter = {};
       if (author) {
         mongooseFilter.author = author;
@@ -29,14 +31,10 @@ export const resolvers = {
     },
     allAuthors: async () => {
       const authors = await Author.find({});
-      const books = await Book.find({});
       return authors.map((author) => {
-        const authorsBooks = books.filter(
-          (book) => book.author === author.name
-        );
         return {
           name: author.name,
-          bookCount: authorsBooks.length,
+          bookCount: author.bookCount,
           born: author.born,
         };
       });
@@ -55,20 +53,27 @@ export const resolvers = {
       if (title?.length < 5) {
         throw new GraphQLError("Title to short");
       }
-      const author = await Author.find({ name: authorName });
+      const author = await Author.findOneAndUpdate(
+        { name: authorName },
+        { $inc: { bookCount: 1 } },
+        { new: true }
+      );
 
       if (!author) {
         throw new GraphQLError("Author doesn't exist");
       }
+
       const newBook = new Book({
         title,
-        author: author[0]._id,
+        author: author._id,
         published,
         genres,
       });
 
       await newBook.save();
       await newBook.populate("author");
+
+      pubSub.publish("BOOK_ADDED", { bookAdded: newBook });
       return newBook;
     },
     editAuthor: async (_, args) => {
@@ -123,6 +128,11 @@ export const resolvers = {
       };
 
       return { token: jwt.sign(tokenData, process.env.JWT_SECRET) };
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubSub.asyncIterableIterator("BOOK_ADDED"),
     },
   },
 };

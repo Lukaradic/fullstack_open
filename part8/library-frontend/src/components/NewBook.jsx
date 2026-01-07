@@ -6,11 +6,11 @@ import { useMutation } from "@apollo/client/react";
 import { ADD_BOOK } from "../gql/mutations";
 
 const NewBook = () => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [published, setPublished] = useState("");
+  const [title, setTitle] = useState("Refactoring, edition 2");
+  const [author, setAuthor] = useState("Martin Fowler");
+  const [published, setPublished] = useState("2018");
   const [genre, setGenre] = useState("");
-  const [genres, setGenres] = useState([]);
+  const [genres, setGenres] = useState(["refactoring"]);
 
   const [addBook, { loading, error }] = useMutation(ADD_BOOK);
 
@@ -25,13 +25,15 @@ const NewBook = () => {
         genres,
         addBookId: uuidv4(),
       },
+      onCompleted: () => {
+        setTitle("");
+        setPublished("");
+        setAuthor("");
+        setGenres([]);
+        setGenre("");
+      },
+      // refetchQueries: [{ query: GET_BOOKS }],
     });
-
-    setTitle("");
-    setPublished("");
-    setAuthor("");
-    setGenres([]);
-    setGenre("");
   };
 
   const addGenre = () => {

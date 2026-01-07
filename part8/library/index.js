@@ -1,9 +1,19 @@
-import { startStandaloneServer } from "@apollo/server/standalone";
-import { server } from "./server.js";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@as-integrations/express5";
+import cors from "cors";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import express from "express";
+import { useServer } from "graphql-ws/use/ws";
+import { createServer } from "http";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 import { User } from "./mongoose/User.js";
+
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { WebSocketServer } from "ws";
+import { resolvers } from "./resolvers.js";
+import { typeDefs } from "./schema.js";
 
 dotenv.config();
 
@@ -16,20 +26,55 @@ mongoose
   .connect(url)
   .then(() => console.log("Connected to mongoDB"))
   .catch((err) =>
-    console.log("error connecting to the DB, message: ", err.messagge)
+    console.log("error connecting to the DB, message: ", err.message)
   );
 
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-  context: async ({ req }) => {
-    const authToken = req?.headers?.authorization ?? null;
+const app = express();
+const httpServer = createServer(app);
+const wsServer = new WebSocketServer({
+  server: httpServer,
+  path: "/",
+});
 
-    if (authToken) {
-      const decodedToken = jwt.verify(authToken, process.env.JWT_SECRET);
-      const currentUser = await User.findById(decodedToken.id);
-      return { currentUser };
-    }
-  },
-}).then(({ url }) => {
-  console.log(`Server ready at ${url}`);
+const schema = makeExecutableSchema({ typeDefs, resolvers });
+const serverCleanup = useServer({ schema }, wsServer);
+const server = new ApolloServer({
+  schema,
+  plugins: [
+    ApolloServerPluginDrainHttpServer({ httpServer }),
+    {
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            await serverCleanup.dispose();
+          },
+        };
+      },
+    },
+  ],
+});
+
+await server.start();
+
+app.use(
+  "/",
+  cors(),
+  express.json(),
+  expressMiddleware(server, {
+    context: async ({ req }) => {
+      const authToken = req?.headers?.authorization ?? null;
+
+      if (authToken) {
+        const decodedToken = jwt.verify(authToken, process.env.JWT_SECRET);
+        const currentUser = await User.findById(decodedToken.id);
+        return { currentUser };
+      }
+    },
+  })
+);
+
+const PORT = process.env.PORT || 4000;
+
+httpServer.listen(PORT, () => {
+  console.log("Server running on port: ", PORT);
 });

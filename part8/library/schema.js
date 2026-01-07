@@ -3,6 +3,7 @@ export const typeDefs = /* GraphQL */ `
     name: String!
     id: ID!
     born: Int
+    bookCount: Int
   }
 
   type Book {
@@ -48,5 +49,9 @@ export const typeDefs = /* GraphQL */ `
     addAuthor(name: String!, born: Int!): Author
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
+  }
+
+  type Subscription {
+    bookAdded: Book!
   }
 `;
