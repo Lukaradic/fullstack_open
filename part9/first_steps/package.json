@@ -6,12 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "calculateExercises": "npx ts-node exerciseCalculator.ts",
-    "calculateBmi": "npx ts-node bmiCalculator.ts"
+    "calculateBmi": "npx ts-node bmiCalculator.ts",
+    "dev": "npx ts-node index.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^5.2.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
   }
 }

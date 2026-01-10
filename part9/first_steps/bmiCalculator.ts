@@ -1,7 +1,10 @@
-const height = process.argv[2];
-const weight = process.argv[3];
+const heightString = process.argv[2];
+const weightString = process.argv[3];
 
-function bmiCalculator(heightString: string, weightString: string): string {
+export function bmiCalculator(
+  heightString: string,
+  weightString: string
+): string {
   const height = parseInt(heightString);
   const weight = parseInt(weightString);
 
@@ -18,6 +21,5 @@ function bmiCalculator(heightString: string, weightString: string): string {
   }
   return "Normal range";
 }
-const response = bmiCalculator(height, weight);
-
+const response = bmiCalculator(heightString, weightString);
 console.log(response);
