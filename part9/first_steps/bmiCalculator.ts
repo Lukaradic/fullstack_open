@@ -1,6 +1,3 @@
-const heightString = process.argv[2];
-const weightString = process.argv[3];
-
 export function bmiCalculator(
   heightString: string,
   weightString: string
@@ -21,5 +18,3 @@ export function bmiCalculator(
   }
   return "Normal range";
 }
-const response = bmiCalculator(heightString, weightString);
-console.log(response);

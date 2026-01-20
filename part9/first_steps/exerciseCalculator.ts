@@ -13,15 +13,6 @@ interface Rating {
   ratingDescription: string;
 }
 
-function getExerciseArray(): number[] {
-  const length = process.argv.length;
-  const arr: number[] = [];
-
-  for (let i = 3; i < length; i++) {
-    arr.push(parseFloat(process.argv[i]));
-  }
-  return arr;
-}
 function getRating(average: number, target: number): Rating {
   if (average < target) {
     return {
@@ -41,14 +32,10 @@ function getRating(average: number, target: number): Rating {
   };
 }
 
-function exerciseCalculator(
+export function exerciseCalculator(
   trainingArray: number[],
-  targetString: string
-): ReturnObject | string {
-  const target = parseInt(targetString);
-  if (!target) {
-    return "Invalid parameters";
-  }
+  target: number
+): ReturnObject {
   let trainingDays = 0;
   let trainingHoursAccumulated = 0;
   trainingArray.forEach((el) => {
@@ -71,9 +58,3 @@ function exerciseCalculator(
     average,
   };
 }
-
-const target = process.argv[2];
-
-const result = exerciseCalculator(getExerciseArray(), target);
-
-console.log(result);
