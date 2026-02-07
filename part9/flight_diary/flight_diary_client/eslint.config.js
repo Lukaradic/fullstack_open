@@ -1,26 +1,26 @@
-import js from "@eslint/js";
+import js from '@eslint/js'
 
-import globals from "globals";
+import globals from 'globals'
 
-import reactHooks from "eslint-plugin-react-hooks";
+import reactHooks from 'eslint-plugin-react-hooks'
 
-import reactRefresh from "eslint-plugin-react-refresh";
+import reactRefresh from 'eslint-plugin-react-refresh'
 
-import tseslint from "typescript-eslint";
+import tseslint from 'typescript-eslint'
 
-import prettier from "eslint-plugin-prettier/recommended";
+import prettier from 'eslint-plugin-prettier/recommended'
 
-import react from "eslint-plugin-react";
+import react from 'eslint-plugin-react'
 
 export default [
-  { ignores: ["dist"] },
+  { ignores: ['dist'] },
 
   js.configs.recommended,
 
   ...tseslint.configs.recommended,
 
   {
-    files: ["**/*.{ts,tsx}"],
+    files: ['**/*.{ts,tsx}'],
 
     languageOptions: {
       ecmaVersion: 2020,
@@ -31,9 +31,9 @@ export default [
     plugins: {
       react,
 
-      "react-hooks": reactHooks,
+      'react-hooks': reactHooks,
 
-      "react-refresh": reactRefresh,
+      'react-refresh': reactRefresh,
 
       prettier,
     },
@@ -41,11 +41,12 @@ export default [
     rules: {
       ...reactHooks.configs.recommended.rules,
 
-      "react-refresh/only-export-components": [
-        "warn",
+      'react-refresh/only-export-components': [
+        'warn',
 
         { allowConstantExport: true },
       ],
+      'react-hooks/exhaustive-deps': 'warn',
     },
   },
-];
+]
